@@ -1,4 +1,4 @@
-package commonTool;
+package tool.crypto;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -14,6 +14,9 @@ import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+
+import tool.PublicString;
+import tool.common.StringProcessor;
 
 public class RSA_Encryptor {
 	public static final BigInteger SHORT_POWER = new BigInteger("17");// 用短公开指数加速加密，就是e=17

@@ -1,4 +1,4 @@
-package commonTool;
+package tool.crypto;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +8,9 @@ import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+
+import tool.PublicString;
+import tool.common.FileOperator;
 
 public class Encryptor {
 	public static final boolean ENCRYPT_MODE = true;

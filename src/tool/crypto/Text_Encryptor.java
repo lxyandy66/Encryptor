@@ -1,9 +1,11 @@
-package commonTool;
+package tool.crypto;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+
+import tool.PublicString;
 
 public class Text_Encryptor {
 	public static final boolean ENCRYPT_MODE = true;

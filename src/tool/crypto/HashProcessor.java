@@ -1,8 +1,10 @@
-package commonTool;
+package tool.crypto;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
+
+import tool.common.StringProcessor;
 
 public class HashProcessor {
 

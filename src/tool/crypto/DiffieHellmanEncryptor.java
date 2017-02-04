@@ -1,4 +1,4 @@
-package commonTool;
+package tool.crypto;
 
 import java.math.BigInteger;
 import java.security.Key;
@@ -8,6 +8,9 @@ import javax.crypto.interfaces.DHPrivateKey;
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHPrivateKeySpec;
 import javax.crypto.spec.DHPublicKeySpec;
+
+import tool.PublicString;
+import tool.common.StringProcessor;
 
 public class DiffieHellmanEncryptor {
 	private static final String LOCAL_ALGORITHM = PublicString.AES_ALGORITHM;
