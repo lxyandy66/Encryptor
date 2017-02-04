@@ -5,9 +5,10 @@ import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
 
-import commonTool.Encryptor;
-import commonTool.AbstractGridBagPanel;
-import commonTool.PublicString;
+import tool.PublicString;
+import tool.crypto.Encryptor;
+import tool.layout.AbstractDialog;
+import tool.layout.AbstractGridBagPanel;
 
 public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 
@@ -30,7 +31,7 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 	private JRadioButton rb_des = new JRadioButton(PublicString.DES_ALGORITHM, true);// 默认为DES
 	private JRadioButton rb_rc4 = new JRadioButton(PublicString.RC4_ALGORITHM, false);
 	private JRadioButton rb_aes = new JRadioButton(PublicString.AES_ALGORITHM, false);
-	private JRadioButton rb_3des=new JRadioButton("LFSR",false);//PublicString.DESede_ALGORITHM,false);
+	private JRadioButton rb_3des = new JRadioButton(PublicString.DESede_ALGORITHM, false);
 	private ButtonGroup rb_group = new ButtonGroup();
 
 	private JCheckBox cb_fromFile = new JCheckBox(PublicString.FROM_FILE, true);// 默认为从文件读取咯
@@ -69,8 +70,8 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 			} else if (e.getSource().equals(rb_aes)) {
 				cryptoAlgorithm = PublicString.AES_ALGORITHM;
 				text_result.setText("Now Choosing AES Mode.");
-			}else if(e.getSource().equals(rb_3des)){
-				cryptoAlgorithm=PublicString.DESede_ALGORITHM;
+			} else if (e.getSource().equals(rb_3des)) {
+				cryptoAlgorithm = PublicString.DESede_ALGORITHM;
 				text_result.setText("Now Choosing 3DES Mode.");
 			}
 
@@ -84,13 +85,14 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 			Object event = e.getSource();
 			if (event.equals(bt_selectFile)) {
 				cleanInput();
-				fileChooser.showDialog(new JLabel("OK"), PublicString.OK);
+				if (fileChooser.showDialog(new JLabel("OK"), PublicString.OK) == JFileChooser.CANCEL_OPTION)
+					return;
 				file_input = fileChooser.getSelectedFiles();
 				if (file_input != null) {
-					text_result.setText("Selected "+ file_input.length+"input file " );
-					String fileName="";
-					for(File temp:file_input)
-						fileName+=temp.getAbsolutePath()+" ; ";
+					text_result.setText("Selected " + file_input.length + " input file ");
+					String fileName = "";
+					for (File temp : file_input)
+						fileName += temp.getAbsolutePath() + " ; ";
 					edit_inputFile.setText(fileName);
 					edit_inputFile.setEnabled(false);
 				} else {
@@ -117,11 +119,23 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				} // 检测合法性
-				setResult(doEncrypt(true), true);// true 表示为加密过程
-				// *****java.security.InvalidKeyException: Wrong key
-				// size这个异常还没处理好
+				final AbstractDialog dialog_process = AbstractDialog.showProgress("处理中", "正在处理，可能需要较长时间",
+						Layout_SymmetricOperator.this);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						try {
+							dialog_process.setVisible(true);
+							setResult(doEncrypt(true), true);
+							dialog_process.dispose();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} // true 表示为加密过程
+					}
+				}).start();
 
-				// 还有从文件加密没写的哈
 			} else if (event.equals(bt_decrypt)) {
 				System.out.println("bt_decrypt is Pressed.");
 				if (!isOperatorLegal()) {
@@ -129,7 +143,23 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				} // 检测合法性
-				setResult(doEncrypt(false), false);
+
+				final AbstractDialog dialog_process = AbstractDialog.showProgress("处理中", "正在处理，可能需要较长时间",
+						Layout_SymmetricOperator.this);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						try {
+							dialog_process.setVisible(true);
+							setResult(doEncrypt(false), false);
+							dialog_process.dispose();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} // true 表示为加密过程
+					}
+				}).start();
 			}
 		} catch (HeadlessException e1) {
 			// TODO Auto-generated catch block
@@ -164,16 +194,14 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 	}
 
 	private boolean isOperatorLegal() {
-		return ((isFromFile && file_input != null && file_key != null  && file_key.canRead())
-				|| (!isFromFile && file_input != null && edit_key.getText() != null
-						&& !edit_key.getText().trim().equals("")));
+		return ((isFromFile && file_input != null && file_key != null && file_key.canRead()) || (!isFromFile
+				&& file_input != null && edit_key.getText() != null && !edit_key.getText().trim().equals("")));
 	}
-
 
 	public Layout_SymmetricOperator() {
 		// 初始化图形界面
 		super();
-		constraints.insets=new Insets(3,2,3,2);//insets用于控制间距
+		constraints.insets = new Insets(3, 2, 3, 2);// insets用于控制间距
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;// GridBagConstraints.BOTH;//
 		// 设置所有组件都是居中
@@ -195,7 +223,7 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 		addComponent(rb_des, 5, 1, 1, 1);
 		addComponent(rb_3des, 5, 2, 1, 1);
 		addComponent(rb_aes, 5, 3, 1, 1);
-		
+
 		addComponent(edit_inputFile, 1, 0, 4, 1);
 		addComponent(edit_key, 3, 0, 4, 1);
 		addComponent(text_result, 7, 0, 4, 1);
