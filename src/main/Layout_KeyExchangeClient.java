@@ -20,11 +20,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import commonTool.DiffieHellmanEncryptor;
-import commonTool.PublicString;
-import commonTool.StringProcessor;
-import commonTool.Text_Encryptor;
-import commonTool.ThreadClient;
+import tool.PublicString;
+import tool.ThreadClient;
+import tool.util.StringProcessor;
+import tool.crypto.DiffieHellmanEncryptor;
+import tool.crypto.Text_Encryptor;
 
 public class Layout_KeyExchangeClient extends JFrame implements ActionListener {
 

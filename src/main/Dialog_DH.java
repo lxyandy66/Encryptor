@@ -14,8 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import commonTool.PublicString;
-import commonTool.RSA_Encryptor;
+import tool.PublicString;
+import tool.crypto.RSA_Encryptor;
 
 public abstract class Dialog_DH extends JFrame implements ActionListener {
 

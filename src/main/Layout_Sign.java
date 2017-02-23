@@ -18,11 +18,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import commonTool.HashProcessor;
-import commonTool.AbstractGridBagPanel;
-import commonTool.PublicString;
-import commonTool.RSA_Encryptor;
-import commonTool.StringProcessor;
+import tool.PublicString;
+import tool.util.StringProcessor;
+import tool.crypto.HashProcessor;
+import tool.crypto.RSA_Encryptor;
+import tool.layout.AbstractGridBagPanel;
 
 public class Layout_Sign extends AbstractGridBagPanel{
 
@@ -65,7 +65,8 @@ public class Layout_Sign extends AbstractGridBagPanel{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource().equals(bt_selectFile)) {
-			fileChooser.showDialog(new JLabel("OK"), PublicString.OK);
+			if(fileChooser.showDialog(new JLabel("OK"), PublicString.OK)==JFileChooser.CANCEL_OPTION)
+				return;
 			file_input = fileChooser.getSelectedFile();
 			if (file_input != null) {
 				edit_input.setText("");
@@ -80,6 +81,7 @@ public class Layout_Sign extends AbstractGridBagPanel{
 				return;
 			}
 			try {
+				
 				edit_sign.setText(getSign(file_input, edit_key.getText().trim(), true));
 				text_result.setText("签名完成!");
 			} catch(IllegalBlockSizeException e2){

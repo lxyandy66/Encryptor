@@ -1,4 +1,4 @@
-package commonTool;
+package tool;
 
 public final class PublicString {
 	public static final String APP_NAME = "加解密服务系统";

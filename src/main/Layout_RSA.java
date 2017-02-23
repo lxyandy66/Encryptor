@@ -12,9 +12,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import commonTool.AbstractGridBagPanel;
-import commonTool.PublicString;
-import commonTool.RSA_Encryptor;
+import tool.PublicString;
+import tool.crypto.RSA_Encryptor;
+import tool.layout.AbstractGridBagPanel;
 
 public class Layout_RSA extends AbstractGridBagPanel  {
 

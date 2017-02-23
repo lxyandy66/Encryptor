@@ -16,12 +16,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import commonTool.DiffieHellmanEncryptor;
-import commonTool.AbstractGridBagPanel;
-import commonTool.PublicString;
-import commonTool.ServerManager;
-import commonTool.StringProcessor;
-import commonTool.Text_Encryptor;
+import tool.PublicString;
+import tool.ServerManager;
+import tool.util.StringProcessor;
+import tool.crypto.DiffieHellmanEncryptor;
+import tool.crypto.Text_Encryptor;
+import tool.layout.AbstractGridBagPanel;
 
 public class Layout_KeyExchangeServer extends AbstractGridBagPanel implements ActionListener {
 

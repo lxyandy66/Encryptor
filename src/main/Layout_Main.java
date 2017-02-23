@@ -14,7 +14,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
-import commonTool.PublicString;
+import tool.PublicString;
 
 public class Layout_Main extends JFrame implements ActionListener {
 

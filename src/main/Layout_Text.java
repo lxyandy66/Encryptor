@@ -14,9 +14,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import commonTool.AbstractGridBagPanel;
-import commonTool.PublicString;
-import commonTool.Text_Encryptor;
+import tool.PublicString;
+import tool.crypto.Text_Encryptor;
+import tool.layout.AbstractGridBagPanel;
 
 public class Layout_Text extends AbstractGridBagPanel {
 

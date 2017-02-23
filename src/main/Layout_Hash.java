@@ -15,9 +15,10 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import commonTool.HashProcessor;
-import commonTool.AbstractGridBagPanel;
-import commonTool.PublicString;
+import tool.PublicString;
+import tool.crypto.HashProcessor;
+import tool.layout.AbstractDialog;
+import tool.layout.AbstractGridBagPanel;
 
 public class Layout_Hash extends AbstractGridBagPanel implements ActionListener {
 
@@ -55,12 +56,12 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 		}
 	};
 
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource().equals(bt_selectFile)) {
-			fileChooser.showDialog(new JLabel("OK"), PublicString.OK);
+			if (fileChooser.showDialog(new JLabel("OK"), PublicString.OK) == JFileChooser.CANCEL_OPTION)
+				return;
 			file_input = fileChooser.getSelectedFile();
 			if (file_input != null) {
 				text_result.setText("Selected input file : " + file_input.getName());
@@ -73,19 +74,27 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 			}
 		} else if (e.getSource().equals(bt_process)) {
 			text_result.setText("");
-			if (!isInputLegal()) {
+			if (!isInputLegal())
 				return;
-			}
-			try {
-				if (isFromFile)
-					setHashResult(doHash(file_input));
-				else
-					setHashResult(doHash(edit_input.getText().trim()));
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				text_result.setText(PublicString.ENCRYPTION_FAIL + " : " + e1.getMessage());
-				e1.printStackTrace();
-			}
+			final AbstractDialog dialog_process = AbstractDialog.showProgress("处理中", "正在处理，可能需要较长时间", Layout_Hash.this);
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					try {
+						dialog_process.setVisible(true);
+						if (isFromFile)
+							setHashResult(doHash(file_input));
+						else
+							setHashResult(doHash(edit_input.getText().trim()));
+						dialog_process.dispose();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} // true 表示为加密过程
+				}
+			}).start();
+
 		}
 	}
 
@@ -101,23 +110,21 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 		}
 		bt_selectFile.setEnabled(isFromFile);
 
-		
-		constraints.fill = GridBagConstraints.HORIZONTAL;// 
+		constraints.fill = GridBagConstraints.HORIZONTAL;//
 		// 设置所有组件都是居中
 		addComponent(bt_process, 6, 1, 2, 1);
-		
+
 		constraints.anchor = GridBagConstraints.EAST;
 		addComponent(bt_selectFile, 0, 3, 1, 1);
 		addComponent(cb_fromFile, 0, 2, 1, 1);
-		
-		
+
 		constraints.anchor = GridBagConstraints.CENTER;
-		
+
 		addComponent(new JLabel("    "), 0, 3, 1, 1);
 		addComponent(new JLabel(PublicString.INFORMATION), 0, 0, 2, 1);
 		constraints.fill = GridBagConstraints.BOTH;
-		
-		constraints.insets=new Insets(3,0,3,0);//insets用于控制间距
+
+		constraints.insets = new Insets(3, 0, 3, 0);// insets用于控制间距
 		for (int i = 0; i < HashProcessor.method.length; i++) {
 			text_method[i].setHorizontalAlignment(SwingConstants.LEFT);
 			addComponent(text_method[i], 2 + i, 0, 1, 1);
