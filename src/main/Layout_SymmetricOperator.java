@@ -1,14 +1,17 @@
 package main;
 
 import java.awt.*;
+import java.awt.dnd.DropTarget;
 import java.awt.event.*;
 import java.io.File;
+import java.util.List;
+
 import javax.swing.*;
 
 import tool.PublicString;
 import tool.crypto.Encryptor;
-import tool.layout.AbstractDialog;
 import tool.layout.AbstractGridBagPanel;
+import tool.layout.AbstractProcessDialog;
 
 public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 
@@ -34,7 +37,7 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 	private JRadioButton rb_3des = new JRadioButton(PublicString.DESede_ALGORITHM, false);
 	private ButtonGroup rb_group = new ButtonGroup();
 
-	private JCheckBox cb_fromFile = new JCheckBox(PublicString.FROM_FILE, true);// 默认为从文件读取咯
+	private JCheckBox cb_fromFile = new JCheckBox(PublicString.FROM_FILE, false);// 默认密钥为不文件读取咯
 
 	private JLabel text_result = new JLabel();
 
@@ -45,8 +48,29 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 	// private File file_output; //输出全部丢给FileOperator类算了
 	private File file_key;
 
+	private DropTarget dropPicker = super.initFileDropTarget(edit_inputFile, new DropReactor() {
+
+		@Override
+		public void onFileDrop(List<File> list) {
+			// TODO Auto-generated method stub
+			// for(File temp:list)
+			// edit_inputFile.setText(temp.getAbsolutePath());
+			if (!list.isEmpty()) {
+				String fileName = "";
+				for (File temp : list)
+					fileName += temp.getAbsolutePath() + " ; ";
+				file_input = (File[]) list.toArray();
+				isFromFile = false;
+				edit_inputFile.setText(fileName);
+				edit_inputFile.setEnabled(false);
+				text_result.setText("Selected " + file_input.length + " input file ");
+			} else
+				throw new NullPointerException("在拖拽文件过程中" + PublicString.INPUT_EMPTY);
+		}
+	});
+
 	// 其它控制变量
-	private boolean isFromFile = true;
+	private boolean isFromFile = false;
 	private String cryptoAlgorithm = PublicString.DES_ALGORITHM;
 
 	// 监听器统一处理
@@ -119,15 +143,15 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				} // 检测合法性
-				final AbstractDialog dialog_process = AbstractDialog.showProgress("处理中", "正在处理，可能需要较长时间",
-						Layout_SymmetricOperator.this);
+				final AbstractProcessDialog dialog_process = AbstractProcessDialog.showProgress("处理中", "正在处理，可能需要较长时间",
+						"", Layout_SymmetricOperator.this);
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
 						try {
 							dialog_process.setVisible(true);
-							setResult(doEncrypt(true), true);
+							setResult(doEncrypt(true, dialog_process), true);
 							dialog_process.dispose();
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
@@ -144,15 +168,15 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 					return;
 				} // 检测合法性
 
-				final AbstractDialog dialog_process = AbstractDialog.showProgress("处理中", "正在处理，可能需要较长时间",
-						Layout_SymmetricOperator.this);
+				final AbstractProcessDialog dialog_process = AbstractProcessDialog.showProgress("处理中", "正在处理，可能需要较长时间",
+						"", Layout_SymmetricOperator.this);
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
 						try {
 							dialog_process.setVisible(true);
-							setResult(doEncrypt(false), false);
+							setResult(doEncrypt(false, dialog_process), false);
 							dialog_process.dispose();
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
@@ -171,11 +195,28 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 
 	}
 
-	private boolean doEncrypt(boolean isEncrypt) throws Exception {
-		return isFromFile ? Encryptor.encrypt_Process(file_input, file_key, isEncrypt, cryptoAlgorithm)
-				: Encryptor.encrypt_Process(file_input, edit_key.getText().trim(), isEncrypt, cryptoAlgorithm);// 文件密钥还没写
-
+	private boolean doEncrypt(boolean isEncrypt, AbstractProcessDialog dialog) throws Exception {
+		if (isFromFile) {
+			for (int i = 0; i < file_input.length; i++) {
+				dialog.setHint("正在进行第 " + i + " 个,共 " + file_input.length + " 个");
+				Encryptor.encrypt_Process(file_input[i], file_key, isEncrypt, cryptoAlgorithm);
+			}
+		} else {
+			for (int i = 0; i < file_input.length; i++) {
+				dialog.setHint("正在进行第 " + i + " 个,共 " + file_input.length + " 个");
+				Encryptor.encrypt_Process(file_input[i], edit_key.getText().trim(), isEncrypt, cryptoAlgorithm);
+			}
+		}
+		return true;
 	}
+
+	// private boolean doEncrypt(boolean isEncrypt) throws Exception {
+	// return isFromFile ? Encryptor.encrypt_Process(file_input, file_key,
+	// isEncrypt, cryptoAlgorithm)
+	// : Encryptor.encrypt_Process(file_input, edit_key.getText().trim(),
+	// isEncrypt, cryptoAlgorithm);// 文件密钥还没写
+	//
+	// }
 
 	private void setResult(boolean isSuccess, boolean isEncrypt) {
 		try {
@@ -201,6 +242,8 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 	public Layout_SymmetricOperator() {
 		// 初始化图形界面
 		super();
+
+		dropPicker.setActive(true);// 激活拖拽文件的监听
 		constraints.insets = new Insets(3, 2, 3, 2);// insets用于控制间距
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;// GridBagConstraints.BOTH;//
@@ -232,7 +275,7 @@ public class Layout_SymmetricOperator extends AbstractGridBagPanel {
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setMultiSelectionEnabled(true);
 		fileChooser.setFileHidingEnabled(false);
-		edit_key.setEditable(false);
+		edit_key.setEditable(true);
 		text_result.setHorizontalAlignment(SwingConstants.CENTER);
 		rb_group.add(rb_des);
 		rb_group.add(rb_aes);

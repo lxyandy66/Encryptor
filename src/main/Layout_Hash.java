@@ -2,11 +2,13 @@ package main;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -17,8 +19,8 @@ import javax.swing.SwingConstants;
 
 import tool.PublicString;
 import tool.crypto.HashProcessor;
-import tool.layout.AbstractDialog;
 import tool.layout.AbstractGridBagPanel;
+import tool.layout.AbstractProcessDialog;
 
 public class Layout_Hash extends AbstractGridBagPanel implements ActionListener {
 
@@ -41,6 +43,21 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 
 	// 文件操作部分
 	private File file_input;
+
+	private DropTarget dropTarget = super.initFileDropTarget(edit_input, new DropReactor() {
+		
+		@Override
+		public void onFileDrop(List<File> list) {
+			// TODO Auto-generated method stub
+			if(list.isEmpty())
+				throw new NullPointerException("在拖拽文件过程中"+PublicString.INPUT_EMPTY);
+			cb_fromFile.setSelected(true);
+			isFromFile=true;
+			file_input=list.get(0);
+			edit_input.setText(file_input.getAbsolutePath());
+			text_result.setText("Selected input file : " + file_input.getName());
+		}
+	});
 
 	// 其它控制变量
 	private boolean isFromFile = false;
@@ -76,7 +93,8 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 			text_result.setText("");
 			if (!isInputLegal())
 				return;
-			final AbstractDialog dialog_process = AbstractDialog.showProgress("处理中", "正在处理，可能需要较长时间", Layout_Hash.this);
+			final AbstractProcessDialog dialog_process = AbstractProcessDialog.showProgress("处理中", "正在处理，可能需要较长时间",
+					null, Layout_Hash.this);
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -100,6 +118,10 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 
 	public Layout_Hash() {
 		super();
+		
+		dropTarget.setActive(true);
+		super.setDropTarget(dropTarget);
+		
 		// 初始化相关控件
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setFileHidingEnabled(false);

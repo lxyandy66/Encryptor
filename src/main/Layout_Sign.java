@@ -1,12 +1,14 @@
 package main;
 
 import java.awt.GridBagConstraints;
+import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -47,6 +49,19 @@ public class Layout_Sign extends AbstractGridBagPanel{
 	// 文件操作部分
 	private File file_input;
 	private int methodSelect = 0;
+	
+	//定义拖拽对象
+	private DropTarget dropTarget=super.initFileDropTarget(edit_input, new DropReactor() {
+		
+		@Override
+		public void onFileDrop(List<File> list) {
+			// TODO Auto-generated method stub
+			file_input=list.get(0);
+			edit_input.setText(file_input.getAbsolutePath());
+			text_result.setText("Selected input file : " + file_input.getName());
+			edit_input.setEnabled(false);
+		}
+	});
 
 	// 监听器部分
 	private ItemListener comb_listen = new ItemListener() {
@@ -148,6 +163,9 @@ public class Layout_Sign extends AbstractGridBagPanel{
 	public Layout_Sign() {
 		// 初始化图形界面
 		super();
+		
+		dropTarget.setActive(true);
+		super.setDropTarget(dropTarget);
 
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.anchor = GridBagConstraints.CENTER;
