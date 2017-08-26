@@ -50,7 +50,7 @@ public class Layout_Text extends AbstractGridBagPanel {
 			}
 
 			try {
-				edit_outMsg.setText(Text_Encryptor.textProcess(edit_inMsg.getText().trim(), true, methodSelect,
+				edit_outMsg.setText(Text_Encryptor.textProcess(edit_inMsg.getText().trim(), true,false, methodSelect,
 						edit_key1.getText().trim(), methodSelect == Text_Encryptor.AFFINE_ENCRYPT
 								? new BigInteger(edit_key2.getText().trim()) : null));
 			} catch (Exception e1) {
@@ -66,7 +66,7 @@ public class Layout_Text extends AbstractGridBagPanel {
 			}
 
 			try {
-				edit_inMsg.setText(Text_Encryptor.textProcess(edit_outMsg.getText().trim(), false, methodSelect,
+				edit_inMsg.setText(Text_Encryptor.textProcess(edit_outMsg.getText().trim(), false, false,methodSelect,
 						edit_key1.getText().trim(), methodSelect == Text_Encryptor.AFFINE_ENCRYPT
 								? new BigInteger(edit_key2.getText().trim()) : null));
 			} catch (Exception e1) {

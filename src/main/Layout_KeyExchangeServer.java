@@ -63,7 +63,7 @@ public class Layout_KeyExchangeServer extends AbstractGridBagPanel implements Ac
 				if (str.indexOf(ENCRYPT_SIGNAL) != -1) {
 					try {
 						edit_console.append(DECRYPT_SIGNAL + Text_Encryptor.textProcess(
-								str.substring(str.indexOf(ENCRYPT_SIGNAL) + ENCRYPT_SIGNAL.length()), false,
+								str.substring(str.indexOf(ENCRYPT_SIGNAL) + ENCRYPT_SIGNAL.length()), false,false,
 								Text_Encryptor.AES_ENCRYPT, edit_localKey.getText().trim()));
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -113,7 +113,7 @@ public class Layout_KeyExchangeServer extends AbstractGridBagPanel implements Ac
 		} else if (e.getSource().equals(bt_send)) {
 			try {
 				if (needAutoEncrypt&&!edit_localKey.getText().equals(""))
-					server.sendBroardcast(ENCRYPT_SIGNAL+Text_Encryptor.textProcess(edit_msg.getText().trim(), true,
+					server.sendBroardcast(ENCRYPT_SIGNAL+Text_Encryptor.textProcess(edit_msg.getText().trim(), true,false,
 							Text_Encryptor.AES_ENCRYPT, edit_localKey.getText().trim()));
 				else
 					server.sendBroardcast(edit_msg.getText().trim());

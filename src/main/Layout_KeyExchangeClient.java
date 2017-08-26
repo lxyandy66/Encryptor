@@ -144,7 +144,7 @@ public class Layout_KeyExchangeClient extends JFrame implements ActionListener {
 			}
 			try {
 				if (needAutoEncrypt && !edit_localKey.getText().equals(""))
-					client.sendMessage(ENCRYPT_SIGNAL + Text_Encryptor.textProcess(edit_msg.getText().trim(), true,
+					client.sendMessage(ENCRYPT_SIGNAL + Text_Encryptor.textProcess(edit_msg.getText().trim(), true,false,
 							Text_Encryptor.AES_ENCRYPT, edit_localKey.getText().trim()));
 				else
 					client.sendMessage(edit_msg.getText().trim());
@@ -180,7 +180,7 @@ public class Layout_KeyExchangeClient extends JFrame implements ActionListener {
 							if (str.indexOf(ENCRYPT_SIGNAL) != -1) {
 								try {
 									String decryptMsg = Text_Encryptor.textProcess(
-											str.substring(str.indexOf(ENCRYPT_SIGNAL) + ENCRYPT_SIGNAL.length()), false,
+											str.substring(str.indexOf(ENCRYPT_SIGNAL) + ENCRYPT_SIGNAL.length()), false,false,
 											Text_Encryptor.AES_ENCRYPT, edit_localKey.getText().trim());
 									edit_console.append(DECRYPT_SIGNAL + decryptMsg);
 									if (decryptMsg.indexOf(ThreadClient.EXIT_SIGNAL) != -1) {

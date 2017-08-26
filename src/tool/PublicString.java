@@ -48,4 +48,5 @@ public final class PublicString {
 	public static final String DH_ALGORITHM="DH";
 	public static final String OWNER="开发者信息";
 	public static final String DEV_INFO="Powered by L'\n李鑫悦 201301110216 建环1302";
+	public static final String EXPORT="批量导出";
 }

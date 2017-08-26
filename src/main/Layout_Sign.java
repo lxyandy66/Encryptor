@@ -39,6 +39,7 @@ public class Layout_Sign extends AbstractGridBagPanel{
 	private JButton bt_selectFile = new JButton(PublicString.FROM_FILE);
 	private JButton bt_sign = new JButton(PublicString.SIGN);
 	private JButton bt_check = new JButton(PublicString.CHECK);
+	private JButton bt_export=new JButton(PublicString.EXPORT);
 	private JLabel text_result = new JLabel();
 
 	private JComboBox<String> comb_hashMethod = new JComboBox<String>(HashProcessor.method);
@@ -184,14 +185,23 @@ public class Layout_Sign extends AbstractGridBagPanel{
 		addComponent(text_result, 6, 1, 2, 1);
 		addComponent(bt_check, 7, 1, 1, 1);
 		addComponent(bt_sign, 7, 2, 1, 1);
+		addComponent(bt_export, 4, 3, 1, 1);
 		addComponent(comb_hashMethod, 5, 0, 1, 1);
 
 		// 注册监听器
 		bt_selectFile.addActionListener(this);
 		bt_check.addActionListener(this);
 		bt_sign.addActionListener(this);
+		bt_export.addActionListener(this);
 		comb_hashMethod.addItemListener(comb_listen);
 
 	}
 
+	private String exportSign(int hashMethod,String signString,File file_input){
+		return file_input.getName()+":\n"
+				+HashProcessor.method[hashMethod]+"值:\n"
+				+"签名:\n"+
+				signString+"\n";
+	}
+	
 }
