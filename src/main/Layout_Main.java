@@ -31,7 +31,7 @@ public class Layout_Main extends JFrame implements ActionListener {
 	private BorderLayout Layout_main = new BorderLayout(10, 10);
 	private Layout_SymmetricOperator panel_file = new Layout_SymmetricOperator();
 	private Layout_Text panel_text = new Layout_Text();
-	private Layout_RSA panel_rsa = new Layout_RSA();
+	private Layout_RSAEdu panel_rsa = new Layout_RSAEdu();
 	private Layout_Hash panel_hash = new Layout_Hash();
 	private Layout_Sign panel_sign = new Layout_Sign();
 	private Layout_KeyExchangeServer panel_exchange = new Layout_KeyExchangeServer();

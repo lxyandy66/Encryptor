@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -40,6 +42,12 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 	private JLabel text_result = new JLabel();
 
 	private JFileChooser fileChooser = new JFileChooser();
+	
+	private GridLayout layout_hashText=new GridLayout(3, 1);
+	private GridLayout layout_hashResult=new GridLayout(3, 1);
+	
+	private JPanel panel_hashText=new JPanel(layout_hashText);
+	private JPanel panel_hashResult=new JPanel(layout_hashResult);
 
 	// 文件操作部分
 	private File file_input;
@@ -128,9 +136,12 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 		text_result.setHorizontalAlignment(SwingConstants.CENTER);
 		for (int i = 0; i < edit_hash.length; i++) {
 			edit_hash[i] = new JTextField();
+			panel_hashResult.add(edit_hash[i]);
 			text_method[i] = new JLabel(HashProcessor.method[i]);
+			panel_hashText.add(text_method[i]);
 		}
 		bt_selectFile.setEnabled(isFromFile);
+		
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;//
 		// 设置所有组件都是居中
@@ -147,11 +158,10 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 		constraints.fill = GridBagConstraints.BOTH;
 
 		constraints.insets = new Insets(3, 0, 3, 0);// insets用于控制间距
-		for (int i = 0; i < HashProcessor.method.length; i++) {
-			text_method[i].setHorizontalAlignment(SwingConstants.LEFT);
-			addComponent(text_method[i], 2 + i, 0, 1, 1);
-			addComponent(edit_hash[i], 2 + i, 1, 3, 1);
-		}
+
+		addComponent(panel_hashText, 2, 0, 1, 3);
+		addComponent(panel_hashResult, 2, 1, 3, 3);//使用panel不会因为edit的长度变化改变布局
+		
 		addComponent(edit_input, 1, 0, 4, 1);
 		addComponent(text_result, 5, 1, 2, 1);
 

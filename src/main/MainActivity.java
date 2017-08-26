@@ -1,11 +1,8 @@
 package main;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-
 import tool.crypto.Encryptor;
 import tool.crypto.HashProcessor;
-import tool.util.StringProcessor;
 
 public class MainActivity {
 

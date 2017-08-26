@@ -16,8 +16,12 @@ import tool.PublicString;
 import tool.crypto.RSA_Encryptor;
 import tool.layout.AbstractGridBagPanel;
 
-
-public class Layout_RSA extends AbstractGridBagPanel  {
+/**
+ * @author 李 鑫悦
+ *这个RSA基于密码学原理课程设计的要求完成，不在通常情况下建议使用
+ *
+ */
+public class Layout_RSAEdu extends AbstractGridBagPanel  {
 
 	/**
 	 * 
@@ -30,7 +34,6 @@ public class Layout_RSA extends AbstractGridBagPanel  {
 	private JTextField text_privateKey = new JTextField();
 	private JTextField text_primeA = new JTextField();
 	private JTextField text_primeB = new JTextField();
-	private JTextField text_keySeed=new JTextField();
 
 	private JButton bt_encrypt = new JButton(PublicString.ENCRYPT);
 	private JButton bt_decrypt = new JButton(PublicString.DECRYPT);
@@ -119,7 +122,7 @@ public class Layout_RSA extends AbstractGridBagPanel  {
 	}
 
 
-	public Layout_RSA() {
+	public Layout_RSAEdu() {
 		// 初始化图形界面
 		super();
 
