@@ -98,6 +98,9 @@ public class Layout_Text extends AbstractGridBagPanel {
 	};
 
 	private boolean isOperatorLegal(boolean isEncrypt) {
+		if(methodSelect==3) {
+			return (isEncrypt&&!edit_inMsg.getText().trim().equals(""))||(!isEncrypt&&!edit_outMsg.getText().trim().equals(""));
+		}
 		if (!edit_key1.getText().trim().equals("")) {
 			if ((isEncrypt && !edit_inMsg.getText().trim().equals(""))
 					|| (!isEncrypt && !edit_outMsg.getText().trim().equals("")))

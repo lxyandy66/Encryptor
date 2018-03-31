@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import tool.PublicString;
-import tool.crypto.RSA_Encryptor;
+import tool.crypto.RSA_EncryptorEdu;
 
 public abstract class Dialog_DH extends JFrame implements ActionListener {
 
@@ -65,7 +65,7 @@ public abstract class Dialog_DH extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource().equals(bt_genPrime)) {
-			edit_p.setText(RSA_Encryptor.genaratePrime().toString());
+			edit_p.setText(RSA_EncryptorEdu.genaratePrime().toString());
 		} else if (e.getSource().equals(bt_genarator)) {
 			if (edit_g.getText().trim().equals("") || edit_p.getText().trim().equals("")
 					|| edit_x.getText().trim().equals(""))

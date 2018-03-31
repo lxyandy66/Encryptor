@@ -13,7 +13,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import tool.PublicString;
-import tool.crypto.RSA_Encryptor;
+import tool.crypto.RSA_EncryptorEdu;
 import tool.layout.AbstractGridBagPanel;
 
 /**
@@ -47,8 +47,8 @@ public class Layout_RSAEdu extends AbstractGridBagPanel  {
 		// TODO Auto-generated method stub
 		Object e = arg0.getSource();
 		if (e.equals(bt_getPrime)) {
-			text_primeA.setText(RSA_Encryptor.genaratePrime().toString());
-			text_primeB.setText(RSA_Encryptor.genaratePrime().toString());
+			text_primeA.setText(RSA_EncryptorEdu.genaratePrime().toString());
+			text_primeB.setText(RSA_EncryptorEdu.genaratePrime().toString());
 		} else if (e.equals(bt_getKey)) {
 			try {
 				if (text_primeA.getText().trim().equals("") || text_primeB.getText().trim().equals("")) {
@@ -56,9 +56,9 @@ public class Layout_RSAEdu extends AbstractGridBagPanel  {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				text_privateKey.setText(RSA_Encryptor.getPrivateKeyString(new BigInteger(text_primeA.getText().trim()),
+				text_privateKey.setText(RSA_EncryptorEdu.getPrivateKeyString(new BigInteger(text_primeA.getText().trim()),
 						new BigInteger(text_primeB.getText().trim())));
-				text_publicKey.setText(RSA_Encryptor.getPublicKeyString(new BigInteger(text_primeA.getText().trim()),
+				text_publicKey.setText(RSA_EncryptorEdu.getPublicKeyString(new BigInteger(text_primeA.getText().trim()),
 						new BigInteger(text_primeB.getText().trim())));
 			} catch(java.security.spec.InvalidKeySpecException e1){
 				JOptionPane.showMessageDialog(null, "选取参数太短，安全性错误 "+e1.getMessage(), PublicString.ERROR,
@@ -78,7 +78,7 @@ public class Layout_RSAEdu extends AbstractGridBagPanel  {
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			if (!RSA_Encryptor.isTwoPrime(new BigInteger(text_primeA.getText().trim()),
+			if (!RSA_EncryptorEdu.isTwoPrime(new BigInteger(text_primeA.getText().trim()),
 					new BigInteger(text_primeB.getText().trim()))) {
 				JOptionPane.showMessageDialog(null, PublicString.NOT_PRIME, PublicString.ERROR,
 						JOptionPane.WARNING_MESSAGE);
@@ -94,7 +94,7 @@ public class Layout_RSAEdu extends AbstractGridBagPanel  {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				text_outMsg.setText(RSA_Encryptor.Encrypt(text_inMsg.getText().trim(), text_publicKey.getText().trim()));
+				text_outMsg.setText(RSA_EncryptorEdu.Encrypt(text_inMsg.getText().trim(), text_publicKey.getText().trim()));
 			} catch(IllegalBlockSizeException e1){
 				JOptionPane.showMessageDialog(null, "需要加密的数据太大，不适用于RSA算法 "+e1.getMessage(), PublicString.ERROR,
 						JOptionPane.ERROR_MESSAGE);
@@ -109,7 +109,7 @@ public class Layout_RSAEdu extends AbstractGridBagPanel  {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				text_inMsg.setText(RSA_Encryptor.Decrypt(text_outMsg.getText().trim(), text_privateKey.getText().trim()));
+				text_inMsg.setText(RSA_EncryptorEdu.Decrypt(text_outMsg.getText().trim(), text_privateKey.getText().trim()));
 			} catch(IllegalBlockSizeException e1){
 				JOptionPane.showMessageDialog(null, "需要解密的数据太大，不适用于RSA算法 "+e1.getMessage(), PublicString.ERROR,
 						JOptionPane.ERROR_MESSAGE);

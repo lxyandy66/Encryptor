@@ -24,7 +24,7 @@ import tool.PublicString;
 import tool.util.FileOperator;
 import tool.util.StringProcessor;
 import tool.crypto.HashProcessor;
-import tool.crypto.RSA_Encryptor;
+import tool.crypto.RSA_EncryptorEdu;
 import tool.layout.AbstractGridBagPanel;
 
 public class Layout_Sign extends AbstractGridBagPanel {
@@ -123,7 +123,7 @@ public class Layout_Sign extends AbstractGridBagPanel {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				if (RSA_Encryptor.Decrypt(originSign, (RSAPublicKey) StringProcessor.base64ToObject(pubKey))
+				if (RSA_EncryptorEdu.Decrypt(originSign, (RSAPublicKey) StringProcessor.base64ToObject(pubKey))
 						.equals(HashProcessor.getHash(file_input[0], methodSelect))) {
 					JOptionPane.showMessageDialog(null, "文件签名是来自授权者", "完成", JOptionPane.INFORMATION_MESSAGE);
 				} else
@@ -176,10 +176,10 @@ public class Layout_Sign extends AbstractGridBagPanel {
 
 	private String getSign(File f, String base64Key, boolean isSign) throws Exception {
 		if (isSign) {
-			return RSA_Encryptor.Encrypt(HashProcessor.getHash(f, methodSelect),
+			return RSA_EncryptorEdu.Encrypt(HashProcessor.getHash(f, methodSelect),
 					(RSAPrivateKey) StringProcessor.base64ToObject(base64Key));
 		} else
-			return RSA_Encryptor.Encrypt(HashProcessor.getHash(f, methodSelect),
+			return RSA_EncryptorEdu.Encrypt(HashProcessor.getHash(f, methodSelect),
 					(RSAPublicKey) StringProcessor.base64ToObject(base64Key));
 	}
 
