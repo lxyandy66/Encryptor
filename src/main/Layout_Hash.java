@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -23,6 +24,7 @@ import tool.PublicString;
 import tool.crypto.HashProcessor;
 import tool.layout.AbstractGridBagPanel;
 import tool.layout.AbstractProcessDialog;
+import tool.util.FileOperator;
 
 public class Layout_Hash extends AbstractGridBagPanel implements ActionListener {
 
@@ -34,6 +36,7 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 	private JButton bt_process = new JButton(PublicString.OK);
 	private JButton bt_selectFile = new JButton(PublicString.SELECT_FILE);
 	private JTextField edit_input = new JTextField();
+	private JButton bt_export = new JButton(PublicString.EXPORT);
 
 	private JLabel[] text_method = new JLabel[HashProcessor.method.length];
 
@@ -42,26 +45,26 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 	private JLabel text_result = new JLabel();
 
 	private JFileChooser fileChooser = new JFileChooser();
-	
-	private GridLayout layout_hashText=new GridLayout(3, 1);
-	private GridLayout layout_hashResult=new GridLayout(3, 1);
-	
-	private JPanel panel_hashText=new JPanel(layout_hashText);
-	private JPanel panel_hashResult=new JPanel(layout_hashResult);
+
+	private GridLayout layout_hashText = new GridLayout(3, 1);
+	private GridLayout layout_hashResult = new GridLayout(3, 1);
+
+	private JPanel panel_hashText = new JPanel(layout_hashText);
+	private JPanel panel_hashResult = new JPanel(layout_hashResult);
 
 	// 文件操作部分
 	private File file_input;
 
 	private DropTarget dropTarget = super.initFileDropTarget(edit_input, new DropReactor() {
-		
+
 		@Override
 		public void onFileDrop(List<File> list) {
 			// TODO Auto-generated method stub
-			if(list.isEmpty())
-				throw new NullPointerException("在拖拽文件过程中"+PublicString.INPUT_EMPTY);
+			if (list.isEmpty())
+				throw new NullPointerException("在拖拽文件过程中" + PublicString.INPUT_EMPTY);
 			cb_fromFile.setSelected(true);
-			isFromFile=true;
-			file_input=list.get(0);
+			isFromFile = true;
+			file_input = list.get(0);
 			edit_input.setText(file_input.getAbsolutePath());
 			text_result.setText("Selected input file : " + file_input.getName());
 		}
@@ -97,6 +100,37 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 				// "Error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
+		} else if (e.getSource().equals(bt_export)) {
+			if (!isInputLegal())
+				return;
+			File exportFile;
+			JFileChooser locationChooser = new JFileChooser();
+			locationChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
+			if (locationChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+				exportFile = locationChooser.getSelectedFile();
+			} else
+				return;
+			if (exportFile != null && exportFile.exists() && exportFile.length() > 1)
+				if (JOptionPane.showConfirmDialog(null, "文件已存在，是否覆盖？", PublicString.WARNING,
+						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION)
+					return;
+			FileOperator fileOperator = new FileOperator(exportFile);
+			try {
+
+				System.out.println(fileOperator.getCurrentFilePath());
+				// 直接写入文件
+				if (isFromFile)
+					fileOperator.writeToFile(exportHashCode(file_input),false);
+				else
+					fileOperator.writeToFile(exportHashCode(edit_input.getText().trim()),false);
+				JOptionPane.showMessageDialog(null, "导出完成!", PublicString.INFORMATION, JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, PublicString.FILE_ERROR + e1.getMessage(), PublicString.ERROR,
+						JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace();
+			}
 		} else if (e.getSource().equals(bt_process)) {
 			text_result.setText("");
 			if (!isInputLegal())
@@ -126,10 +160,10 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 
 	public Layout_Hash() {
 		super();
-		
+
 		dropTarget.setActive(true);
 		super.setDropTarget(dropTarget);
-		
+
 		// 初始化相关控件
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setFileHidingEnabled(false);
@@ -141,11 +175,11 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 			panel_hashText.add(text_method[i]);
 		}
 		bt_selectFile.setEnabled(isFromFile);
-		
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;//
 		// 设置所有组件都是居中
-		addComponent(bt_process, 6, 1, 2, 1);
+		addComponent(bt_export, 6, 1, 1, 1);
+		addComponent(bt_process, 6, 2, 1, 1);
 
 		constraints.anchor = GridBagConstraints.EAST;
 		addComponent(bt_selectFile, 0, 3, 1, 1);
@@ -160,14 +194,15 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 		constraints.insets = new Insets(3, 0, 3, 0);// insets用于控制间距
 
 		addComponent(panel_hashText, 2, 0, 1, 3);
-		addComponent(panel_hashResult, 2, 1, 3, 3);//使用panel不会因为edit的长度变化改变布局
-		
+		addComponent(panel_hashResult, 2, 1, 3, 3);// 使用panel不会因为edit的长度变化改变布局
+
 		addComponent(edit_input, 1, 0, 4, 1);
 		addComponent(text_result, 5, 1, 2, 1);
 
 		// 监听器注册
 		bt_process.addActionListener(this);
 		bt_selectFile.addActionListener(this);
+		bt_export.addActionListener(this);
 		cb_fromFile.addItemListener(cb_listen);
 	}
 
@@ -201,5 +236,22 @@ public class Layout_Hash extends AbstractGridBagPanel implements ActionListener 
 	private boolean isInputLegal() {
 		return ((isFromFile && file_input.isFile()) || (!isFromFile && !edit_input.getText().trim().equals("")));
 	}
+	
+	private String exportHashCode(File f) throws Exception {
+		String result= f.getName()+":\n";
+		int i=0;
+		for(String temp:doHash(f)) 
+			result+=HashProcessor.method[i++]+": "+temp+"\n";
+		return result;
+	}
+	
+	private String exportHashCode(String str) throws Exception {
+		String result= str+":\n";
+		int i=0;
+		for(String temp:doHash(str)) 
+			result+=HashProcessor.method[i++]+": "+temp+"\n";
+		return result;
+	}
+	
 
 }

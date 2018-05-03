@@ -1,6 +1,8 @@
 package main;
 
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
 import java.awt.event.*;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -10,6 +12,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -33,11 +36,13 @@ public class Layout_RSA extends AbstractGridBagPanel {
 	private JTextField text_privateKey = new JTextField();
 	// private JTextField text_primeA = new JTextField();
 	// private JTextField text_primeB = new JTextField();
-	private JTextField text_keySeed = new JTextField();
 
 	private JButton bt_encrypt = new JButton(PublicString.ENCRYPT);
 	private JButton bt_decrypt = new JButton(PublicString.DECRYPT);
 	private JButton bt_getKey = new JButton(PublicString.GET_KEY);
+	
+	private FlowLayout layout_button=new FlowLayout();
+	private JPanel panel_button=new JPanel(layout_button);
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -123,9 +128,14 @@ public class Layout_RSA extends AbstractGridBagPanel {
 		addComponent(new JLabel(PublicString.ENCRYPTED_MESSAGE), 6, 0, 1, 1);
 
 		constraints.anchor = GridBagConstraints.CENTER;
-		addComponent(bt_decrypt, 8, 1, 1, 1);
-		addComponent(bt_getKey, 8, 2, 2, 1);
-		addComponent(bt_encrypt, 8, 4, 1, 1);
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		panel_button.add(bt_decrypt);
+		panel_button.add(bt_getKey);
+		panel_button.add(bt_encrypt);
+		addComponent(panel_button, 8, 0, 4, 1);
+//		addComponent(bt_decrypt, 8, 1, 1, 1);
+//		addComponent(bt_getKey, 8, 2, 1, 1);
+//		addComponent(bt_encrypt, 8, 3, 1, 1);
 
 		constraints.fill = GridBagConstraints.BOTH;
 		addComponent(text_inMsg, 1, 0, 6, 1);
