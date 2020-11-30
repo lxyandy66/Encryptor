@@ -15,9 +15,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import tool.PublicString;
-import tool.ServerManager;
+import tool.network.ServerManager;
 import tool.util.StringProcessor;
 import tool.crypto.DiffieHellmanEncryptor;
 import tool.crypto.Text_Encryptor;
@@ -56,9 +57,13 @@ public class Layout_KeyExchangeServer extends AbstractGridBagPanel implements Ac
 	private ServerManager server = new ServerManager() {
 
 		@Override
-		public synchronized void printConsole(String str) {
+		public void printConsole(final String str) {
 			// TODO Auto-generated method stub
-			edit_console.append("\n" + str);
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					edit_console.append("\n" + str);
+				}
+			});
 			if (needAutoEncrypt && !edit_localKey.getText().trim().equals("")) {
 				if (str.indexOf(ENCRYPT_SIGNAL) != -1) {
 					try {
@@ -72,6 +77,12 @@ public class Layout_KeyExchangeServer extends AbstractGridBagPanel implements Ac
 					}
 				}
 			}
+		}
+
+		@Override
+		public void processIncome(String str) {
+			// TODO Auto-generated method stub
+			
 		}
 
 	};

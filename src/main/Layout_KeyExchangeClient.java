@@ -21,7 +21,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import tool.PublicString;
-import tool.ThreadClient;
+import tool.network.ThreadClient;
 import tool.util.StringProcessor;
 import tool.crypto.DiffieHellmanEncryptor;
 import tool.crypto.Text_Encryptor;
