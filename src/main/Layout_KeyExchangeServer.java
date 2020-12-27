@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.net.Socket;
 
 import javax.crypto.interfaces.DHPrivateKey;
 import javax.crypto.interfaces.DHPublicKey;
@@ -19,6 +20,7 @@ import javax.swing.SwingUtilities;
 
 import tool.PublicString;
 import tool.network.ServerManager;
+import tool.network.SocketProcessor;
 import tool.util.StringProcessor;
 import tool.crypto.DiffieHellmanEncryptor;
 import tool.crypto.Text_Encryptor;
@@ -54,8 +56,20 @@ public class Layout_KeyExchangeServer extends AbstractGridBagPanel implements Ac
 	private boolean needAutoEncrypt = false;
 	private boolean isOnline = false;
 
-	private ServerManager server = new ServerManager() {
-
+	private ServerManager server = new ServerManager(new SocketProcessor() {
+		
+		@Override
+		public void processIncomeSocket(Socket s) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void processIncomeMsg(String str) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 		@Override
 		public void printConsole(final String str) {
 			// TODO Auto-generated method stub
@@ -79,13 +93,13 @@ public class Layout_KeyExchangeServer extends AbstractGridBagPanel implements Ac
 			}
 		}
 
+	
 		@Override
-		public void processIncome(String str) {
+		public void initalProcess(Object ts) {
 			// TODO Auto-generated method stub
 			
 		}
-
-	};
+	}) ;
 
 	private Thread tr_server = new Thread(server);
 	// 监听器部分

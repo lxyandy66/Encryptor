@@ -36,8 +36,8 @@ public class Layout_KeyExchangeClient extends JFrame implements ActionListener {
 	private static final String ENCRYPT_SIGNAL = "【本消息已加密】";
 	private static final String DECRYPT_SIGNAL = "【本消息已解密】";
 
-	private JTextField edit_address = new JTextField();
-	private JTextField edit_portNo = new JTextField();
+	private JTextField edit_address = new JTextField("127.0.0.1");
+	private JTextField edit_portNo = new JTextField("8266");
 	private JTextField edit_msg = new JTextField();
 	private JTextField edit_pubKey = new JTextField();
 	private JTextField edit_prvKey = new JTextField();

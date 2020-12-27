@@ -24,7 +24,7 @@ public class UnitTest {
 
 		Layout_Main gui = new Layout_Main(0, 0, 594, 420);
 		gui.setVisible(true);
-		
+
 	}
 
 }
